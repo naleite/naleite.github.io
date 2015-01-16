@@ -144,7 +144,7 @@ function start(){
 	camera1.rotation.y=-15.0*3.14159/180.0
 	cameras[cameras.length]=camera1;*/
 
-	function addCamera(px,py,pz,rx,ry,rz){
+	function addCamera(px,py,pz){
 		var camera=new THREE.PerspectiveCamera(90, 1, 1, 10000);
 		camera.position.x=px;
 		camera.position.y=py;
@@ -155,11 +155,19 @@ function start(){
 		cameras[cameras.length]=camera;
 	}
 
-	addCamera(-260,300,100,-80,-15,180);//camera a p3
-	//addCamera(-260,300,100,0,0,0);//camera a p3
+	/*addCamera(-260,300,100,-80,-15,180);//camera a p3
 	addCamera(80,240,100,0,80,90);//camera a p7
 	addCamera(80,0,150,75,0,0)//camera a p10
-	addCamera(240,-260,100,80,20,0);
+	addCamera(240,-260,150,80,20,0);//camera a p16
+	addCamera(80,-40,150,0,0,0);//camera a p21
+	addCamera(-140,-280,150,0,0,0);//camera a p27*/
+
+	addCamera(-260,300,100);//camera a p3
+	addCamera(80,240,100);//camera a p7
+	addCamera(80,0,150)//camera a p10
+	addCamera(240,-260,150);//camera a p16
+	addCamera(80,-40,150);//camera a p21
+	addCamera(-140,-280,150);//camera a p27
 
 	var cameramode=0;
 	function changemode(){
@@ -177,7 +185,10 @@ function start(){
 			car3.add(RC.camera);
 		}
 		else {
+			cameras[i].up=new THREE.Vector3(0,0,1);
+			cameras[i].lookAt(car0.position);
 			RC.camera = cameras[i];
+
 			//console.log("Camera active: " + i + " " + cameras[i])
 		}
 	}
@@ -193,10 +204,9 @@ function start(){
 			case 3:
 			case 29:
 			case 30:
-			case 28:
 				activeCamera(0);
-				cameras[0].up=new THREE.Vector3(0,0,1);
-				cameras[0].lookAt(car0.position);
+				//cameras[0].up=new THREE.Vector3(0,0,1);
+				//cameras[0].lookAt(car0.position);
 				//console.log("camera choisir: 0");
 				break;
 			case 4:
@@ -204,27 +214,43 @@ function start(){
 			case 6:
 			case 7:
 				activeCamera(1);
-				cameras[1].up=new THREE.Vector3(0,0,1);
-				cameras[1].lookAt(car0.position);
+				//cameras[1].up=new THREE.Vector3(0,0,1);
+				//cameras[1].lookAt(car0.position);
 				//console.log("camera choisir: 1");
 				break;
 
 			case 8:
 			case 9:
 			case 10:
-				activeCamera(2);
-				cameras[2].up=new THREE.Vector3(0,0,1);
-				cameras[2].lookAt(car0.position);
-				break;
 			case 11:
+				activeCamera(2);
+				//cameras[2].up=new THREE.Vector3(0,0,1);
+				//cameras[2].lookAt(car0.position);
+				break;
 			case 12:
 			case 13:
 			case 14:
 			case 15:
 			case 16:
+			case 17:
+			case 18:
 				activeCamera(3);
-				cameras[3].up=new THREE.Vector3(0,0,1);
-				cameras[3].lookAt(car0.position);
+				//cameras[3].up=new THREE.Vector3(0,0,1);
+				//cameras[3].lookAt(car0.position);
+				break;
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+				activeCamera(4);
+				break;
+			case 24:
+			case 25:
+			case 26:
+			case 27:
+			case 28:
+				activeCamera(5);
 				break;
 			default :
 				activeCamera(-1);break;
@@ -256,9 +282,11 @@ function start(){
 		if (currentlyPressedKeys[67]) // (C) debug
 		{
 			// debug scene
-			RC.scene.traverse(function(o){
-				console.log('object:'+o.name+'>'+o.id+'::'+o.type);
-			});
+			//RC.scene.traverse(function(o){
+			//	console.log('object:'+o.name+'>'+o.id+'::'+o.type);
+			//});
+			console.log("active NAV:"+NAV.findActive(car0.position.x,car0.position.y));
+
 		}				
 		if (currentlyPressedKeys[68]) // (D) Right
 		{
