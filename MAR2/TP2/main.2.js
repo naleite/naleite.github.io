@@ -156,6 +156,7 @@ function start(){
 	}
 
 	addCamera(-260,300,100,-80,-15,180);//camera a p3
+	//addCamera(-260,300,100,0,0,0);//camera a p3
 	addCamera(80,240,100,0,80,90);//camera a p7
 	addCamera(80,0,150,75,0,0)//camera a p10
 	addCamera(240,-260,100,80,20,0);
@@ -194,26 +195,36 @@ function start(){
 			case 30:
 			case 28:
 				activeCamera(0);
+				cameras[0].up=new THREE.Vector3(0,0,1);
+				cameras[0].lookAt(car0.position);
 				//console.log("camera choisir: 0");
 				break;
 			case 4:
 			case 5:
 			case 6:
 				activeCamera(1);
+				cameras[1].up=new THREE.Vector3(0,0,1);
+				cameras[1].lookAt(car0.position);
 				//console.log("camera choisir: 1");
 				break;
 			case 7:
 			case 8:
 			case 9:
 			case 10:
-				activeCamera(2);break;
+				activeCamera(2);
+				cameras[2].up=new THREE.Vector3(0,0,1);
+				cameras[2].lookAt(car0.position);
+				break;
 			case 11:
 			case 12:
 			case 13:
 			case 14:
 			case 15:
 			case 16:
-				activeCamera(3);break;
+				activeCamera(3);
+				cameras[3].up=new THREE.Vector3(0,0,1);
+				cameras[3].lookAt(car0.position);
+				break;
 			default :
 				activeCamera(-1);break;
 
