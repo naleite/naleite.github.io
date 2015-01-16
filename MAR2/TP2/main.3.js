@@ -127,7 +127,7 @@ function start()
 	NAV.addPlane(	new navPlane('p30', -240, -180, -140, -80,	+0,+20,'ny')); 		// 30			
 	NAV.setPos(CARx,CARy,CARz); 
 	NAV.initActive();
-	NAV.
+
 	// DEBUG
 	//NAV.debug();
 	//var navMesh = NAV.toMesh();
@@ -210,7 +210,7 @@ function start()
 		// Rendering
 
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
-	};
+	}
 
 	render(); 
 }
