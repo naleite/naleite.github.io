@@ -149,9 +149,9 @@ function start(){
 		camera.position.x=px;
 		camera.position.y=py;
 		camera.position.z=pz;
-		camera.rotation.x=rx*3.14159/180.0;
-		camera.rotation.y=ry*3.14159/180.0;
-		camera.rotation.z=rz*3.14159/180.0;
+		//camera.rotation.x=rx*3.14159/180.0;
+		//camera.rotation.y=ry*3.14159/180.0;
+		//camera.rotation.z=rz*3.14159/180.0;
 		cameras[cameras.length]=camera;
 	}
 
@@ -202,12 +202,13 @@ function start(){
 			case 4:
 			case 5:
 			case 6:
+			case 7:
 				activeCamera(1);
 				cameras[1].up=new THREE.Vector3(0,0,1);
 				cameras[1].lookAt(car0.position);
 				//console.log("camera choisir: 1");
 				break;
-			case 7:
+
 			case 8:
 			case 9:
 			case 10:
