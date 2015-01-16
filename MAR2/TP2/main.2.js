@@ -133,6 +133,7 @@ function start(){
 	NAV.initActive();
 
 
+	//cameras fixes
 	var cameras=[]
 	//ajouter des cameras fixes
 	/*var camera1=new THREE.PerspectiveCamera(45, 1, 1, 10000);
@@ -257,6 +258,91 @@ function start(){
 
 		}
 	}
+	//camera fixes fin
+
+
+	//Timer begins
+	var clockGlobal=new THREE.Clock();
+	clockGlobal.stop();
+
+	var text_timer = document.createElement('div');
+	text_timer.style.position = 'absolute';
+//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+	text_timer.style.width = 200;
+	text_timer.style.height = 50;
+	//text_timer.style.backgroundColor = "blue";
+	//text_timer.innerHTML = clock.getElapsedTime();
+	text_timer.style.top = 20 + 'px';
+	text_timer.style.left = 20 + 'px';
+	document.body.appendChild(text_timer);
+
+	function toXYCoords (pos) {
+		var vector = projector.projectVector(pos.clone(), RC.camera);
+		vector.x = (vector.x + 1)/2 * window.innerWidth;
+		vector.y = -(vector.y - 1)/2 * window.innerHeight;
+		return vector;
+	}
+
+	var laps=0;
+	var clock;
+	function isLapFinish(){
+
+		if(car0.position.x>=-260 &&car0.position.x<=-180 &&
+		car0.position.y>=130 && car0.position.y<133){
+			if(laps==0){
+				clock=new THREE.Clock();
+				clockGlobal.start();
+				clock.start();
+				laps++;
+			}
+			else{
+				if(clock.getElapsedTime()>1){
+					laps++;
+					return true;
+				}
+				else{
+					return false;
+				}
+
+
+			}
+			console.log(clockGlobal.getElapsedTime().toFixed(2));
+
+		}
+		else return false;
+
+	}
+
+	var bestTime=100000;
+	function getBestTime(time){
+		if(time<bestTime){
+			bestTime=time;
+		}
+	}
+	//clock.start();
+
+	//var bestlap=bestTime;
+	var finishTimera=0;
+	function doFinish(time){
+			finishtime=clock.getElapsedTime().toFixed(2);
+			//finishtime=time;
+			clock.stop();
+			getBestTime(finishtime);
+			//clock.stop();
+			if (bestTime < 100000) {
+				finishTOshow = "<br />Last Lap: " + finishtime + "s" + "<br />Best Lap: " + bestTime + "s";
+			}
+			else {
+				finishTOshow = "<br />Last Lap: " + finishtime + "s" + "<br />Best Lap: " + "s";
+			}
+
+			clock = new THREE.Clock();
+			clock.start();
+
+
+
+	}
+
 	// DEBUG
 	//NAV.debug();
 	//var navMesh = NAV.toMesh();
@@ -286,6 +372,7 @@ function start(){
 			//	console.log('object:'+o.name+'>'+o.id+'::'+o.type);
 			//});
 			console.log("active NAV:"+NAV.findActive(car0.position.x,car0.position.y));
+			console.log("Car x: "+car0.position.x +" y: "+car0.position.y);
 
 		}				
 		if (currentlyPressedKeys[68]) // (D) Right
@@ -299,6 +386,7 @@ function start(){
 		if (currentlyPressedKeys[90]) // (Z) Up
 		{
 			vehicle.goFront(1200, 1200) ;
+
 		}
 		if (currentlyPressedKeys[83]) // (S) Down 
 		{
@@ -316,8 +404,7 @@ function start(){
 		}*/
 		if (currentlyPressedKeys[79]) // (O) Changer le camera
 		{
-			console.log("O presse");
-			activeCamera(-1)
+			text_timer.innerHTML = "Time: "+clock.getElapsedTime();
 		}
 
 		if (currentlyPressedKeys[80]) // (R) Changer le camera
@@ -336,9 +423,24 @@ function start(){
 	//	window resize
 	function  onWindowResize() {RC.onWindowResize(window.innerWidth,window.innerHeight);}
 
+
+	function getTimePass(){
+		return clock.getElapsedTime();
+	}
+	var finishTOshow="";
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
+
+		text_timer.innerHTML = "<h3>Lap: "+laps+"</h3>Time: "+"0s"+finishTOshow;
+		if(laps!=0){
+			text_timer.innerHTML = "<h3>Lap: "+laps+"</h3>Time: "+clockGlobal.getElapsedTime().toFixed(2)+"s"+finishTOshow;
+		}
+
+		if(isLapFinish()){
+			doFinish();
+		}
+
 		// Vehicle stabilization 
 		vehicle.stabilizeSkid(50) ; 
 		vehicle.stabilizeTurn(1000) ;
