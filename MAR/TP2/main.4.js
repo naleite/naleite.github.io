@@ -84,7 +84,7 @@ function start()
 
 	//heli.add(turbineD);
 
-	function run_pales(vector3){
+	function run_pales(delta){
 		for(i=0;i<pales.length;i++){
 			pales[i].rotation.y+=delta;
 		}
@@ -94,7 +94,7 @@ function start()
 	function orient_heli(vector3,rotationInc){
 
 		heli.rotateOnAxis(vector3, rotationInc);
-		run_pales(vector3);
+		run_pales(rotationInc);
 	}
 
 	// Camera setup
@@ -148,7 +148,8 @@ function start()
 		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
 	}
 
-	var delta=0.03;
+
+	//var delta=0.01;
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
@@ -156,7 +157,8 @@ function start()
 
 
 		var vector3=new THREE.Vector3(0.0,0.0,1.0);
-		orient_heli(vector3,0.03);
+
+		orient_heli(vector3,0.05);
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
 
