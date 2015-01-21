@@ -48,8 +48,8 @@ function start()
 	//var helicoCorp = Loader.load({filename: 'assets/helico/helicoCorp.obj', node: heli, name: 'helicoCorp'});//
 	var helicoCorp = Loader.loadMesh('assets/helico','helicoCorp','obj',heli,'border',	0,0,0,'front');
 	helicoCorp.name="helicoCorp";
-	var turbineD = Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',8,-3,3,'front');
-	var turbineG = Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',-8,-3,3,'front');
+	var turbineD = Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',8.5,-3,2,'front');
+	var turbineG = Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',-8.5,-3,2,'front');
 	var turbineC = Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',0,0,4,'front');
 	turbineC.rotation.x=90*3.14159/180;
 	var axeD=Loader.loadMesh('assets/helico','axe','obj',turbineD,'border',0,1,0,'front');
@@ -84,17 +84,31 @@ function start()
 
 	//heli.add(turbineD);
 
-	function run_pales(delta){
-		for(i=0;i<pales.length;i++){
-			pales[i].rotation.y+=delta;
+	function run_pales(vitesse,Vacc){
+		for(i=0;i<3;i++){
+			pales[i].rotation.y+=vitesse;
+		}
+		for(i=3;i<pales.length;i++){
+			pales[i].rotation.y+=vitesse+Vacc;
 		}
 	}
 
 	var rotationIncrement = 0.05 ;
-	function orient_heli(vector3,rotationInc){
+	function orient_heli(vector_v,vitesse){
 
-		heli.rotateOnAxis(vector3, rotationInc);
-		run_pales(rotationInc);
+		heli.rotateOnAxis(vector_v, vitesse);
+		run_pales(vitesse,0);
+	}
+
+	function orient_turbine(vecteur_A,vitesse,acc){
+		//turbineG.rotation.z+=acc*3.14159/180;
+		//turbineD.rotation.z+=acc*3.14159/180;
+		//
+		turbineD.rotateOnAxis(vecteur_A,acc);
+		turbineG.rotateOnAxis(vecteur_A,acc);
+		var vitesseAcc=vitesse;
+		run_pales(vitesseAcc,0.3);
+
 	}
 
 	// Camera setup
@@ -158,7 +172,10 @@ function start()
 
 		var vector3=new THREE.Vector3(0.0,0.0,1.0);
 
-		orient_heli(vector3,0.05);
+		var vitesse=0.05;
+		var acc=0.01
+		orient_heli(vector3,vitesse);
+		orient_turbine(vector3,vitesse,acc);
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
 
