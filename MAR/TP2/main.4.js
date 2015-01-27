@@ -84,37 +84,57 @@ function start()
 
 	//heli.add(turbineD);
 
-	function run_pales(vitesse,Vacc){
-		for(i=0;i<3;i++){
+	function run_pales_v(vitesse){
+		for(i=0;i<pales.length;i++){
 			pales[i].rotation.y+=vitesse;
 		}
+
+	}
+
+
+	function acc_pales_v(vitesse,acc){
 		for(i=3;i<pales.length;i++){
-			pales[i].rotation.y+=vitesse+Vacc;
+			pales[i].rotation.y+=vitesse;
 		}
 	}
 
-	var rotationIncrement = 0.05 ;
-	function orient_heli(vector_v,vitesse){
 
-		heli.rotateOnAxis(vector_v, vitesse);
-		run_pales(vitesse,0);
+	//Q2
+	function orient_heli(vector_v){
+
+		//heli.rotateOnAxis(vector_v, vitesse);
+		var x=vector_v.x;
+		var y=vector_v.y;
+		var angle=Math.atan2(y,x);
+		heli.rotation.z+=angle;
+		//run_pales_v(vitesse);
 	}
 
-	function orient_turbine(vecteur_A,vitesse,acc){
-		//turbineG.rotation.z+=acc*3.14159/180;
-		//turbineD.rotation.z+=acc*3.14159/180;
-		//
-		turbineD.rotateOnAxis(vecteur_A,acc);
-		turbineG.rotateOnAxis(vecteur_A,acc);
-		var vitesseAcc=vitesse;
-		run_pales(vitesseAcc,0.3);
 
+
+	//Q3
+	function orient_turbine(vector_A){
+		var x=vector_A.x;
+		var y=vector_A.y;
+		var angle=Math.atan2(y,x);
+		console.log("Angle acc:"+angle+" x,y "+x+" "+y);
+		turbineD.rotation.z+=angle;
+		turbineG.rotation.z+=angle;
+		//var vitesseAcc=vitesse;
+		//run_pales(vitesseAcc,0.3);
+
+	}
+
+	function getAcc(vec0,vec1){
+		var acc=new THREE.Vector3(vec1.x-vec0.x,vec1.y-vec0.y,vec1.z-vec0.z);
+		return acc;
 	}
 
 	// Camera setup
 	renderingEnvironment.camera.position.x = 0 ;
 	renderingEnvironment.camera.position.y = 0 ;
 	renderingEnvironment.camera.position.z = 40 ;
+
 	
 	//	event listener
 	//	---------------------------------------------------------------------------
@@ -129,6 +149,8 @@ function start()
 	function handleKeyDown(event) { currentlyPressedKeys[event.keyCode] = true;}
 	function handleKeyUp(event) {currentlyPressedKeys[event.keyCode] = false;}
 
+	var rotationIncrement = 0.05 ;
+	var paleVitesseDef=0.1;
 	function handleKeys() {
 		if (currentlyPressedKeys[67]) // (C) debug
 		{
@@ -140,18 +162,33 @@ function start()
 
 		if (currentlyPressedKeys[68]) // (D) Right
 		{
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), rotationIncrement) ;
+			//renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), rotationIncrement) ;
+			var vectorD=new THREE.Vector3(1,1.1,1.0);
+			var vectorD2=new THREE.Vector3(1.3,1,1.0);
+			console.log(vectorD.x+"  "+vectorD.y+"  "+vectorD.z);
+			var vitesse=0.05;
+			var acc=getAcc(vectorD,vectorD2);
+			orient_heli(vectorD);
+			orient_turbine(acc);
+
 		}
 		if (currentlyPressedKeys[81]) // (Q) Left 
-		{		
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), -rotationIncrement) ;
+		{
+			var vectorQ=new THREE.Vector3(1.0,1.0,-1.0);
+			var vectorQ=new THREE.Vector3(1.2,1.0,-1.0);
+			var vitesse=0.05;
+			var acc=0.01;
+			orient_heli(vectorQ,vitesse);
+			//renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), -rotationIncrement) ;
 		}
 		if (currentlyPressedKeys[90]) // (Z) Up
 		{
+
 			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(1.0,0.0,0.0), rotationIncrement) ;
 		}
 		if (currentlyPressedKeys[83]) // (S) Down 
 		{
+
 			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(1.0,0.0,0.0), -rotationIncrement) ;
 		}
 	}
@@ -169,13 +206,11 @@ function start()
 		handleKeys();
 		// Rendering
 
+		run_pales_v(paleVitesseDef);
+		//heli.position.atan2();
 
-		var vector3=new THREE.Vector3(0.0,0.0,1.0);
 
-		var vitesse=0.05;
-		var acc=0.01
-		orient_heli(vector3,vitesse);
-		orient_turbine(vector3,vitesse,acc);
+		//orient_turbine(vector3,vitesse,acc);
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
 

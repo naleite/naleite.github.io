@@ -24,7 +24,7 @@ function FlyingVehicle(configuration)
 	this.position = configuration.position ; //new THREE.Vector3(0.0,0.0,0.0) ;
 	this.speed = new THREE.Vector3(0.0,0.0,0.0) ;
 	this.mass = configuration.mass ; //50.0 ;
-	
+	this.acceleration = new THREE.Vector3(0.0,0.0,0.0) ;
 	this.angles = new THREE.Vector3(configuration.xAngle, configuration.yAngle, configuration.zAngle) ;
 	this.angularSpeed = new THREE.Vector3(0.0,0.0,0.0) ;
 
@@ -189,6 +189,9 @@ function FlyingVehicle(configuration)
 		result = Physics.eulerIntegration(this.mass, dt, this.position, this.speed, this.force) ;		
 		this.position = result.position ;
 		this.speed = result.speed ;
+
+		var newForce = this.force.clone();
+		this.acceleration = newForce.multiplyScalar(1/this.mass);
 		// Resets everything
 		this.reset() ;
 	} ;
