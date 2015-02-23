@@ -218,13 +218,25 @@ function Helicopter(configuration)
 
 
 	//Q2
-	this.orient_heli = function(){
+	this.orient_heli = function() {
 
 		//heli.rotateOnAxis(vector_v, vitesse);
-		var x=this.speed.x;
-		var y=this.speed.y;
-		var angle=Math.atan2(y,x);
-		return angle;
+		var x = this.speed.x;
+		var y = this.speed.y;
+
+			var angle = Math.atan2(y, x);
+			//if (angle <= 3.14 / 4 && angle >= -3.14 / 4) {
+			return angle;
+
+		/*}
+
+		else if(angle<-3.14/4){
+			return -3.14/4;
+		}
+		else if(angle>3.14/4){
+			return 3.14/4;
+		}*/
+
 
 		//run_pales_v(vitesse);
 	};
@@ -234,11 +246,15 @@ function Helicopter(configuration)
 	this.orient_turbine = function (){
 		var x=this.acceleration.x;
 		var y=this.acceleration.y;
-		var angle=Math.atan2(y,x);
 
-		this.vPales+=calcule_norm(this.acceleration);
 
-		return angle;
+			var angle=Math.atan2(y,x);
+
+			this.vPales+=calcule_norm(this.acceleration);
+
+			return angle;
+
+
 
 
 	};
