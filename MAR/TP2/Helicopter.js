@@ -12,7 +12,7 @@ ModulesLoader.requireModules(['threejs/three.min.js', 'Physics.js', 'DebugHelper
  */
 function Helicopter(configuration)
 {
-	if(!configuration.hasOwnProperty('loader')) { configuration.position = new THREE.Vector3(0.0,0.0,0.0) ; }
+	if(!configuration.hasOwnProperty('position')) { configuration.position = new THREE.Vector3(0.0,0.0,0.0) ; }
 	if(!configuration.hasOwnProperty('mass')) { configuration.mass = 50 ; }
 	if(!configuration.hasOwnProperty('xLength')) { configuration.xLength = 5 ; }
 	if(!configuration.hasOwnProperty('yLength')) { configuration.yLength = 2 ; }
@@ -20,10 +20,7 @@ function Helicopter(configuration)
 	if(!configuration.hasOwnProperty('xAngle')) { configuration.xAngle = 0.0 ; }
 	if(!configuration.hasOwnProperty('yAngle')) { configuration.yAngle = 0.0 ; }
 	if(!configuration.hasOwnProperty('zAngle')) { configuration.zAngle = 0.0 ; }
-	if(!configuration.hasOwnProperty('vPales')) { configuration.vPales = 0.08 ; }
-	if(!configuration.hasOwnProperty('Loader')) { configuration.Loader = new ThreeLoadingEnv(); }
-	if(!configuration.hasOwnProperty('RC')) { configuration.RC =new ThreeRenderingEnv(); }
-	//if(!configuration.hasOwnProperty('acceleration')) { configuration.vPales = 0.08 ; }
+	if(!configuration.hasOwnProperty('vPalesDefault')) { configuration.vPalesDefault = 0.08 ; }
 
 
 
@@ -38,45 +35,8 @@ function Helicopter(configuration)
 	this.xLength = configuration.xLength ;
 	this.yLength = configuration.yLength  ;
 	this.zLength = configuration.zLength  ;
-	this.vPales = configuration.vPales  ;
-	this.Loader = configuration.loader;
-	this.RC=configuration.RC;
-
-	var heli=new THREE.Object3D();
-	heli.name="heli";
-	heli.position=this.position;
-	this.RC.addToScene(heli);
-	var helicoCorp = this.Loader.loadMesh('assets/helico','helicoCorp','obj',heli,'border',	0,0,0,'front');
-	helicoCorp.name="helicoCorp";
-	var turbineD = this.Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',8.5,-3,2,'front');
-	var turbineG = this.Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',-8.5,-3,2,'front');
-	var turbineC = this.Loader.loadMesh('assets/helico','turbine','obj',	helicoCorp,'border',0,0,4,'front');
-	turbineC.rotation.x=90*3.14159/180;
-	var axeD=this.Loader.loadMesh('assets/helico','axe','obj',turbineD,'border',0,1,0,'front');
-	var axeG=this.Loader.loadMesh('assets/helico','axe','obj',turbineG,'border',0,1,0,'front');
-	var axeC=this.Loader.loadMesh('assets/helico','axe','obj',turbineC,'border',0,1,0,'front');
-
-	var paleD1=this.Loader.loadMesh('assets/helico','pale2','obj',axeD,'border',0,2,0,'front');
-	var paleD2=this.Loader.loadMesh('assets/helico','pale2','obj',axeD,'border',0,2,0,'front');
-	paleD2.rotation.y=120*3.14159/180;
-	var paleD3=this.Loader.loadMesh('assets/helico','pale2','obj',axeD,'border',0,2,0,'front');
-	paleD3.rotation.y=240*3.14159/180;
-
-	var paleG1=this.Loader.loadMesh('assets/helico','pale2','obj',axeG,'border',0,2,0,'front');
-	var paleG2=this.Loader.loadMesh('assets/helico','pale2','obj',axeG,'border',0,2,0,'front');
-	paleG2.rotation.y=120*3.14159/180;
-	var paleG3=this.Loader.loadMesh('assets/helico','pale2','obj',axeG,'border',0,2,0,'front');
-	paleG3.rotation.y=240*3.14159/180;
-
-	var paleC1=this.Loader.loadMesh('assets/helico','pale2','obj',axeC,'border',0,2,0,'front');
-	var paleC2=this.Loader.loadMesh('assets/helico','pale2','obj',axeC,'border',0,2,0,'front');
-	paleC2.rotation.y=120*3.14159/180;
-	var paleC3=this.Loader.loadMesh('assets/helico','pale2','obj',axeC,'border',0,2,0,'front');
-	paleC3.rotation.y=240*3.14159/180;
-
-	var pales=[paleC1,paleC2,paleC3,paleD1,paleD2,paleD3,paleG1,paleG2,paleG3];
-
-
+	this.vPalesDefault = configuration.vPalesDefault  ;
+	this.vPales=this.vPalesDefault;
 
 
 
@@ -240,18 +200,13 @@ function Helicopter(configuration)
 
 		var newForce = this.force.clone();
 		this.acceleration = newForce.multiplyScalar(1/this.mass);
+
+		//vitesse de pales
+
 		// Resets everything
+		//this.runPales();
 		this.reset() ;
 	} ;
-
-	this.runPales=function(){
-		//var v=vitesse;
-		var norm_v=calcule_norm(this.speed);
-		for(i=0;i<pales.length;i++){
-			pales[i].rotation.y+=norm_v;
-		}
-
-	};
 
 
 	function calcule_norm(vect){
@@ -269,7 +224,8 @@ function Helicopter(configuration)
 		var x=this.speed.x;
 		var y=this.speed.y;
 		var angle=Math.atan2(y,x);
-		heli.rotation.z+=angle;
+		return angle;
+
 		//run_pales_v(vitesse);
 	};
 
@@ -279,11 +235,11 @@ function Helicopter(configuration)
 		var x=this.acceleration.x;
 		var y=this.acceleration.y;
 		var angle=Math.atan2(y,x);
-		console.log("Angle acc:"+angle+" x,y "+x+" "+y);
-		turbineD.rotation.z+=angle;
-		turbineG.rotation.z+=angle;
-		//var vitesseAcc=vitesse;
-		//run_pales(vitesseAcc,0.3);
+
+		this.vPales+=calcule_norm(this.acceleration);
+
+		return angle;
+
 
 	};
 
